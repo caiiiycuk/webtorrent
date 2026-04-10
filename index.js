@@ -15,6 +15,7 @@ import { ThrottleGroup } from 'speed-limiter'
 import NatAPI from '@silentbot1/nat-api' // browser exclude
 import ConnPool from './lib/conn-pool.js' // browser exclude
 import Torrent from './lib/torrent.js'
+import { enableSecure } from './lib/peer.js'
 import { NodeServer, BrowserServer } from './lib/server.js'
 
 import VERSION from './version.cjs'
@@ -94,7 +95,7 @@ export default class WebTorrent extends EventEmitter {
     }
 
     if (opts.secure === true) {
-      import('./lib/peer.js').then(({ enableSecure }) => enableSecure())
+      enableSecure()
     }
 
     this._debug(
@@ -555,7 +556,7 @@ export default class WebTorrent extends EventEmitter {
 }
 
 WebTorrent.WEBRTC_SUPPORT = Peer.WEBRTC_SUPPORT
-WebTorrent.UTP_SUPPORT = ConnPool.UTP_SUPPORT
+WebTorrent.UTP_SUPPORT = ConnPool?.UTP_SUPPORT ?? false
 WebTorrent.VERSION = VERSION
 
 /**
