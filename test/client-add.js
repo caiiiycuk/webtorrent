@@ -205,7 +205,7 @@ test('client.add: invalid torrent id: short buffer', t => {
 })
 
 test('client.add: paused torrent', t => {
-  t.plan(5)
+  t.plan(6)
 
   const client = new WebTorrent({ dht: false, tracker: false, lsd: false, natUpnp: false, natPmp: false })
 
@@ -217,6 +217,9 @@ test('client.add: paused torrent', t => {
 
   torrent.on('infoHash', async () => {
     t.equal(torrent.paused, true)
+
+    torrent._update = () => { t.pass('resume schedules update') }
+    torrent.resume()
 
     await client.remove(fixtures.leaves.magnetURI, err => { t.error(err, 'torrent destroyed') })
     t.equal(client.torrents.length, 0)
